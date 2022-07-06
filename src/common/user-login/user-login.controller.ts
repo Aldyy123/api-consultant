@@ -2,18 +2,15 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, ForbiddenException, 
 import { UserLoginService } from './user-login.service';
 import { CreateUserLoginDto } from './dto/create-user-login.dto';
 import { UpdateUserLoginDto } from './dto/update-user-login.dto';
-import { AuthGuard } from '@nestjs/passport';
 
 @Controller('user-login')
 export class UserLoginController {
   constructor(private readonly userLoginService: UserLoginService) {}
 
-  @UseGuards(AuthGuard('local'))
   @Post()
   create(@Body() createUserLoginDto: CreateUserLoginDto) {
     console.log(createUserLoginDto)
-    return 'Login '
-    // return this.userLoginService.create(createUserLoginDto);
+    return this.userLoginService.create(createUserLoginDto);
   }
 
   @Get()
