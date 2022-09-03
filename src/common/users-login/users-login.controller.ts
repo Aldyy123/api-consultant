@@ -1,15 +1,26 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ForbiddenException, HttpStatus, UseGuards } from '@nestjs/common';
-import { UserLoginService } from './user-login.service';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ForbiddenException,
+  HttpStatus,
+  UseGuards,
+} from '@nestjs/common';
+import { UsersLoginService } from './users-login.service';
 import { CreateUserLoginDto } from './dto/create-user-login.dto';
 import { UpdateUserLoginDto } from './dto/update-user-login.dto';
 
-@Controller('user-login')
-export class UserLoginController {
-  constructor(private readonly userLoginService: UserLoginService) {}
+@Controller('users-login')
+export class UsersLoginController {
+  constructor(private readonly userLoginService: UsersLoginService) {}
 
   @Post()
   create(@Body() createUserLoginDto: CreateUserLoginDto) {
-    console.log(createUserLoginDto)
+    console.log(createUserLoginDto);
     return this.userLoginService.create(createUserLoginDto);
   }
 
@@ -21,17 +32,20 @@ export class UserLoginController {
   @Get(':email')
   async findOne(@Param('email') email: string) {
     const user = await this.userLoginService.findOne(email);
-    if(user.error){
+    if (user.error) {
       throw new ForbiddenException({
         statusCode: HttpStatus.FORBIDDEN,
-        ...user
-      })
+        ...user,
+      });
     }
-    return 
+    return;
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserLoginDto: UpdateUserLoginDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateUserLoginDto: UpdateUserLoginDto,
+  ) {
     return this.userLoginService.update(+id, updateUserLoginDto);
   }
 

@@ -1,7 +1,4 @@
-import {Role} from './role.entity'
-import {User} from './user.entity'
+import { Role } from './role.entity';
+import { Users } from './users.entity';
 
-export{
-    Role,
-    User
-}
+export { Role, Users };

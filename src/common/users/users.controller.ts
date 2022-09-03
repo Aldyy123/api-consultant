@@ -1,28 +1,41 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res, HttpStatus, HttpException, ForbiddenException, BadRequestException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Res,
+  HttpStatus,
+  HttpException,
+  ForbiddenException,
+  BadRequestException,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { Response } from 'express'
+import { CreateUserDto } from './dto/create-users.dto';
+import { UpdateUserDto } from './dto/update-users.dto';
+import { Response } from 'express';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
     const users = await this.usersService.create(createUserDto);
-    if(users.error){
+    if (users.error) {
       throw new BadRequestException({
         statusCode: HttpStatus.BAD_REQUEST,
-        ...users
-      })
-    }else{
+        ...users,
+      });
+    } else {
       return res.json({
         users: users.users,
         message: 'success',
         statusCode: HttpStatus.CREATED,
-        error: users.error
-      })
+        error: users.error,
+      });
     }
   }
 
@@ -32,16 +45,16 @@ export class UsersController {
     if (users.length) {
       return res.status(HttpStatus.OK).json({
         users,
-        message: "Data Retrieving successfull",
+        message: 'Data Retrieving successfull',
         statusCode: HttpStatus.OK,
-        error: false
-      })
+        error: false,
+      });
     } else {
       throw new ForbiddenException({
         statusCode: HttpStatus.FORBIDDEN,
         message: 'data not found',
-        error: true
-      })
+        error: true,
+      });
     }
   }
 
@@ -51,45 +64,49 @@ export class UsersController {
     if (user.error) {
       throw new ForbiddenException({
         statusCode: HttpStatus.FORBIDDEN,
-        ...user
-      })
+        ...user,
+      });
     } else {
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,
-        ...user
-      })
+        ...user,
+      });
     }
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto, @Res() res: Response) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+    @Res() res: Response,
+  ) {
     const user = await this.usersService.update(id, updateUserDto);
-    if(user.error){
+    if (user.error) {
       throw new BadRequestException({
         statusCode: HttpStatus.BAD_REQUEST,
-        ...user
-      })
+        ...user,
+      });
     }
     return res.status(HttpStatus.CREATED).json({
       statuCode: HttpStatus.OK,
-      ...user
-    })
+      ...user,
+    });
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string, @Res() res: Response) {
     const user = await this.usersService.remove(id);
-    if(user){
+    if (user) {
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,
-        message: "Successfull to Delete",
-        error: !user
-      })
+        message: 'Successfull to Delete',
+        error: !user,
+      });
     }
     throw new ForbiddenException({
       message: 'User Not Found',
       error: !user,
-      statusCode: HttpStatus.FORBIDDEN
-    })
+      statusCode: HttpStatus.FORBIDDEN,
+    });
   }
 }

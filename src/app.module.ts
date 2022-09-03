@@ -2,12 +2,12 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './common/users/users.module';
-import {TypeOrmModule} from '@nestjs/typeorm'
-import {User} from './common/users/entities/user.entity'
-import {LoggerMiddleware} from './common/middleware/logger.middler'
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Users } from './common/users/entities/users.entity';
+import { LoggerMiddleware } from './common/middleware/logger.middler';
 import { AuthModule } from './common/auth/auth.module';
-import { UserLoginModule } from './common/user-login/user-login.module';
-import { UserLogin } from './common/user-login/entities/user-login.entity';
+import { UserLoginModule } from './common/users-login/users-login.module';
+import { UsersLogin } from './common/users-login/entities/users-login.entity';
 import { Role } from './common/users/entities/role.entity';
 
 @Module({
@@ -20,21 +20,17 @@ import { Role } from './common/users/entities/role.entity';
       username: 'root',
       password: '',
       database: 'consultant',
-      entities: [
-        User,
-        UserLogin,
-        Role
-      ],
+      entities: [Users, UsersLogin, Role],
       synchronize: true,
     }),
     AuthModule,
-    UserLoginModule
+    UserLoginModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleware).forRoutes('users')
+    consumer.apply(LoggerMiddleware).forRoutes('users');
   }
 }
